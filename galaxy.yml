@@ -17,8 +17,8 @@ tags:
 dependencies:
   "ansible.posix": ">=1.3.0,<1.4.0"
   "community.general": ">=4.6.0,<4.7.0"
-repository: https://github.com/szaffarano/ansible-szaffarano-general
-documentation: https://github.com/szaffarano/ansible-szaffarano-general
-homepage: https://github.com/szaffarano/ansible-szaffarano-general
-issues: https://github.com/szaffarano/ansible-szaffarano-general/issues
+repository: https://github.com/szaffarano/szaffarano.general
+documentation: https://github.com/szaffarano/szaffarano.general
+homepage: https://github.com/szaffarano/szaffarano.general
+issues: https://github.com/szaffarano/szaffarano.general/issues
 build_ignore: []
