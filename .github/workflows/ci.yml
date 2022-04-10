@@ -1,0 +1,54 @@
+---
+name: Molecule Integration Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "ansible_collections/szaffarano/general"
+
+    strategy:
+      max-parallel: 4
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: "ansible_collections/szaffarano/general"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: "${{ matrix.python-version }}"
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r test-requirements.txt
+
+      - name: Run pre-commit checks
+        run: |
+          pre-commit run -a
+
+      - name: Ansible sanity check
+        run: |
+          ansible-test sanity
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
+
+      - name: Molecule integration tests
+        run: |
+          make -C tests/integration
+        env:
+          ANSIBLE_FORCE_COLOR: "1"
