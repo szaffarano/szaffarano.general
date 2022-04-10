@@ -1,0 +1,43 @@
+---
+dependency:
+  name: galaxy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+driver:
+  name: docker
+platforms:
+  - name: arch
+    image: archlinux:latest
+    dockerfile: Dockerfile-arch.j2
+    pre_build_image: false
+
+  - name: ubuntu
+    dockerfile: Dockerfile-ubuntu.j2
+    image: ubuntu:xenial
+    pre_build_image: false
+
+  - name: debian
+    image: debian:testing-slim
+    dockerfile: Dockerfile-debian.j2
+    pre_build_image: false
+
+  - name: fedora
+    image: fedora:35
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+scenario:
+  test_sequence:
+    - lint
+    - destroy
+    - syntax
+    - create
+    - converge
+    - idempotence
+    - verify
+    - check
+    - destroy

@@ -1,0 +1,30 @@
+---
+- name: Bootstrap as root
+  hosts: all
+
+  vars:
+    ansible_password: na
+    bootstrap_setup_username: root
+    bootstrap_ansible_username: test_user
+    bootstrap_ansible_password: test_user_passwd
+    bootstrap_ansible_passwordless: false
+    bootstrap_root_password: rootpasswd
+
+  roles:
+    - role: szaffarano.general.bootstrap
+
+- name: Bootstrap as non-root
+  hosts: all
+
+  vars:
+    ansible_password: test_user_passwd
+    bootstrap_setup_username: test_user
+    bootstrap_ansible_username: ansible
+    bootstrap_ansible_password: ansible
+    bootstrap_ansible_passwordless: true
+    bootstrap_root_password: anotherpasswd
+    bootstrap_delete_setup_user: false
+
+  roles:
+    - role: szaffarano.general.bootstrap
+      become: true

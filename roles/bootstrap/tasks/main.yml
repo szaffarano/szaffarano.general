@@ -1,0 +1,74 @@
+---
+- name: Set '{{ bootstrap_setup_username }}' as ansible user
+  ansible.builtin.set_fact:
+    ansible_ssh_user: "{{ bootstrap_setup_username }}"
+    ansible_sudo_pass: "{{ ansible_password }}"
+
+- name: Ensure sudo is installed
+  ansible.builtin.package:
+    name: sudo
+    state: present
+
+- name: Create '{{ bootstrap_ansible_username }}' user
+  ansible.builtin.user:
+    name: "{{ bootstrap_ansible_username }}"
+    comment: Ansible user
+    state: present
+    password: >-
+      {{ bootstrap_ansible_password | password_hash(
+            'sha512', 65534 | random(seed=inventory_hostname) | string) }}
+
+- name: Reset root password
+  ansible.builtin.user:
+    name: root
+    state: present
+    password: >-
+      {{ bootstrap_root_password | password_hash(
+            'sha512', 65534 | random(seed=inventory_hostname) | string) }}
+  when:
+    - bootstrap_setup_username is ne 'root'
+    - bootstrap_root_password is defined
+
+- name: Configure sudoers for '{{ bootstrap_ansible_username }}' user
+  community.general.sudoers:
+    name: "{{ bootstrap_ansible_username }}"
+    state: present
+    user: "{{ bootstrap_ansible_username }}"
+    nopassword: "{{ bootstrap_ansible_passwordless }}"
+    commands: ALL
+
+- name: Set authorized key for '{{ bootstrap_ansible_username }}' user
+  ansible.posix.authorized_key:
+    user: "{{ bootstrap_ansible_username }}"
+    state: present
+    key: "{{ bootstrap_ansible_pubkey }}"
+    exclusive: "{{ bootstrap_ansible_exclusive_key }}"
+  when: bootstrap_ansible_pubkey is defined
+
+- name: Start using '{{ bootstrap_ansible_username }}' user
+  ansible.builtin.set_fact:
+    ansible_ssh_user: "{{ bootstrap_ansible_username }}"
+    ansible_sudo_pass: "{{ bootstrap_ansible_password }}"
+    ansible_password: "{{ bootstrap_ansible_password }}"
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Disable loginctl for '{{ bootstrap_setup_username }}' before delete it
+  ansible.builtin.command: loginctl kill-user {{ bootstrap_setup_username }}
+  when:
+    - bootstrap_ansible_username is ne bootstrap_setup_username
+    - bootstrap_setup_username is ne 'root'
+    - bootstrap_delete_setup_user
+    - ansible_facts.services is defined
+    - ansible_facts.services["systemd-logind.service"] is defined
+
+- name: Delete '{{ bootstrap_setup_username }}' user
+  ansible.builtin.user:
+    name: "{{ bootstrap_setup_username }}"
+    remove: true
+    state: absent
+  when:
+    - bootstrap_ansible_username is ne bootstrap_setup_username
+    - bootstrap_setup_username is ne 'root'
+    - bootstrap_delete_setup_user

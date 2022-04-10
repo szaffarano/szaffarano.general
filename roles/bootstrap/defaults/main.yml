@@ -1,0 +1,6 @@
+---
+bootstrap_setup_username: pi
+bootstrap_ansible_username: ansible
+bootstrap_ansible_passwordless: false
+bootstrap_delete_setup_user: true
+bootstrap_ansible_exclusive_key: true

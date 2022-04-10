@@ -1,0 +1,13 @@
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+FROM archlinux:latest
+
+RUN pacman --noconfirm -Sy \
+  python \
+  && rm -rf /var/cache/pacman/pkg/* \
+  && rm -rf /var/liv/pacman/sync/*
+
+# vim: ft=dockerfile

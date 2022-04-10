@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+
+  tasks:
+    - name: Collect facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Get ansible user info
+      ansible.builtin.getent:
+        database: passwd
+        key: ansible
+      register: created_ansible_user
+
+    - name: print
+      ansible.builtin.debug:
+        var: created_ansible_user
+
+    - name: Assertions
+      ansible.builtin.assert:
+        that:
+          - created_ansible_user.failed is false
+          - ansible_facts.packages is superset(["sudo"])
