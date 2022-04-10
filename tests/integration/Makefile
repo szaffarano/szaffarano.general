@@ -17,4 +17,4 @@ roles: $(roles)
 
 .PHONY: $(scenarios)
 $(scenarios):
-	molecule -c molecule.yml test -s $(notdir $@)
+	molecule -vvv -c molecule.yml test -s $(notdir $@)

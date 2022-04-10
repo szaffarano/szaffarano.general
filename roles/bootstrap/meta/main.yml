@@ -22,3 +22,9 @@ galaxy_info:
   galaxy_tags:
     - bootstrap
     - raspberry
+
+dependencies: []
+
+collections:
+  - community.general
+  - ansible.posix
