@@ -30,7 +30,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "${{ matrix.python-version }}"
 
       - name: Install dependencies
         run: |
@@ -47,7 +47,7 @@ jobs:
         env:
           ANSIBLE_FORCE_COLOR: "1"
 
-      - name: Test with molecule
+      - name: Molecule integration tests
         run: |
           make -C tests/integration
         env:
