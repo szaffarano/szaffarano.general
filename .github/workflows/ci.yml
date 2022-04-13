@@ -39,7 +39,7 @@ jobs:
 
       - name: Run pre-commit checks
         run: |
-          pre-commit run -a
+          SKIP="no-commit-to-branch" pre-commit run -a
 
       - name: Ansible sanity check
         run: |
