@@ -1,7 +1,7 @@
 ---
 namespace: szaffarano
 name: general
-version: 1.0.0
+version: 1.1.0
 readme: README.md
 authors:
   - Sebastian Zaffarano <sebas@zaffarano.com.ar>
