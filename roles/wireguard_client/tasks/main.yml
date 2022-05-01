@@ -1,0 +1,19 @@
+---
+- name: Ensure wireguard-tools is installed.
+  ansible.builtin.package:
+    name: wireguard-tools
+    state: present
+
+- name: Configure {{ wg_client_name }} wireguard client
+  ansible.builtin.template:
+    src: ./templates/client.conf.j2
+    dest: "/etc/wireguard/{{wg_client_name}}.conf"
+    mode: 644
+  notify: Wireguard client configured
+
+- name: "{{ 'Enable' if wg_client_enabled else 'Disable' }} wg-quick@{{ wg_client_name}}.service"
+  ansible.builtin.service:
+    name: wg-quick@{{ wg_client_name}}.service
+    enabled: "{{ wg_client_enabled | string }}"
+    state: "{{ 'started' if wg_client_enabled else 'stopped' }}"
+  when: wg_client_enabled

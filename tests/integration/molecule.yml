@@ -8,26 +8,25 @@ lint: |
   yamllint .
   ansible-lint
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: arch
     image: archlinux:latest
-    dockerfile: Dockerfile-arch.j2
+    dockerfile: ../../Dockerfile-arch.j2
     pre_build_image: false
-
-  - name: ubuntu
-    dockerfile: Dockerfile-ubuntu.j2
-    image: ubuntu:xenial
-    pre_build_image: false
-
-  - name: debian
-    image: debian:testing-slim
-    dockerfile: Dockerfile-debian.j2
-    pre_build_image: false
-
   - name: fedora
+    dockerfile: ../../Dockerfile-fedora.j2
     image: fedora:35
     pre_build_image: true
+  - name: debian
+    image: debian:testing-slim
+    dockerfile: ../../Dockerfile-debian.j2
+    pre_build_image: false
+  - name: ubuntu
+    image: ubuntu:xenial
+    dockerfile: ../../Dockerfile-ubuntu.j2
+    pre_build_image: false
+
 provisioner:
   name: ansible
 verifier:

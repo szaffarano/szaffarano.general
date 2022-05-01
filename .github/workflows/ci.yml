@@ -34,6 +34,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get -y update
+          sudo apt-get -y install podman
+
+      - name: Install dependencies
+        run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install -r test-requirements.txt
 

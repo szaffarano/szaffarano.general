@@ -1,0 +1,19 @@
+---
+- name: Verify
+  hosts: all
+
+  tasks:
+    - name: Collect facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Get gw config file stat
+      ansible.builtin.stat:
+        path: /etc/wireguard/wg-client-01.conf
+      register: wg_conf
+
+    - name: Assert that gw config exists
+      ansible.builtin.assert:
+        that:
+          - wg_conf.stat.exists
+          - ansible_facts.packages is superset(["wireguard-tools"])

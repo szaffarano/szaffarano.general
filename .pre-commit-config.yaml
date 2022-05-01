@@ -3,6 +3,9 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
     hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
       - id: check-merge-conflict
       - id: debug-statements
       - id: end-of-file-fixer
@@ -13,3 +16,7 @@ repos:
     rev: 0.9.6
     hooks:
       - id: update-docs
+  - repo: https://github.com/psf/black
+    rev: 21.12b0
+    hooks:
+      - id: black
