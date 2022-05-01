@@ -57,7 +57,7 @@
 - name: Disable autologin for '{{ bootstrap_setup_username }}' before delete it
   ansible.builtin.service:
     name: getty@tty1.service
-    enabled: no
+    enabled: false
     state: stopped
   when:
     - bootstrap_ansible_username is ne bootstrap_setup_username
