@@ -54,6 +54,18 @@
 - name: Populate service facts
   ansible.builtin.service_facts:
 
+- name: Disable autologin for '{{ bootstrap_setup_username }}' before delete it
+  ansible.builtin.service:
+    name: getty@tty1.service
+    enabled: no
+    state: stopped
+  when:
+    - bootstrap_ansible_username is ne bootstrap_setup_username
+    - bootstrap_setup_username is ne 'root'
+    - bootstrap_delete_setup_user
+    - ansible_facts.services is defined
+    - ansible_facts.services["getty@tty1.service"] is defined
+
 - name: Disable loginctl for '{{ bootstrap_setup_username }}' before delete it
   ansible.builtin.command: loginctl kill-user {{ bootstrap_setup_username }}
   when:
