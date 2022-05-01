@@ -49,6 +49,7 @@ jobs:
       - name: Ansible sanity check
         run: |
           ansible-test sanity
+          ansible-lint
         env:
           ANSIBLE_FORCE_COLOR: "1"
 
