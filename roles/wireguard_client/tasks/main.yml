@@ -16,3 +16,4 @@
     name: wg-quick@{{ wg_client_name}}.service
     enabled: "{{ wg_client_enabled | string }}"
     state: "{{ 'started' if wg_client_enabled else 'stopped' }}"
+  when: wg_client_enabled
