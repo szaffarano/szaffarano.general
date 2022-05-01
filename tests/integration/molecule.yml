@@ -34,8 +34,8 @@ platforms:
     image: ubuntu:xenial
     dockerfile: ../../Dockerfile-ubuntu.j2
     pre_build_image: false
-    systemd: true
-    command: /lib/systemd/systemd
+    systemd: always
+    command: /sbin/init
 
 provisioner:
   name: ansible
