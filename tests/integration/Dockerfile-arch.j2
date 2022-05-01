@@ -6,7 +6,7 @@ FROM {{ item.image }}
 FROM archlinux:latest
 
 RUN pacman --noconfirm -Sy \
-  systemd \
+  systemd python \
   && rm -rf /var/cache/pacman/pkg/* \
   && rm -rf /var/liv/pacman/sync/*
 
