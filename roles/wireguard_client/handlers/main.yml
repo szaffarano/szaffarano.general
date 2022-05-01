@@ -1,0 +1,6 @@
+---
+- name: Wireguard client configured
+  ansible.builtin.service:
+    name: wg-quick@{{ wg_client_name}}.service
+    state: restarted
+  when: wg_client_enabled

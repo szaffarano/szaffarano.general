@@ -8,26 +8,35 @@ lint: |
   yamllint .
   ansible-lint
 driver:
-  name: docker
+  name: podman
 platforms:
   - name: arch
     image: archlinux:latest
-    dockerfile: Dockerfile-arch.j2
+    dockerfile: ../../Dockerfile-arch.j2
     pre_build_image: false
+    systemd: true
+    command: /lib/systemd/systemd
 
   - name: ubuntu
-    dockerfile: Dockerfile-ubuntu.j2
     image: ubuntu:xenial
+    pre_build_image: true
+    systemd: true
+    command: /lib/systemd/systemd
+
+  - name: fedora
+    dockerfile: ../../Dockerfile-fedora.j2
+    image: fedora:35
     pre_build_image: false
+    systemd: true
+    command: /lib/systemd/systemd
 
   - name: debian
     image: debian:testing-slim
-    dockerfile: Dockerfile-debian.j2
+    dockerfile: ../../Dockerfile-debian.j2
     pre_build_image: false
+    systemd: true
+    command: /lib/systemd/systemd
 
-  - name: fedora
-    image: fedora:35
-    pre_build_image: true
 provisioner:
   name: ansible
 verifier:
@@ -38,6 +47,7 @@ scenario:
     - destroy
     - syntax
     - create
+    - prepare
     - converge
     - idempotence
     - verify

@@ -1,0 +1,13 @@
+{% if item.registry is defined %}
+FROM {{ item.registry.url }}/{{ item.image }}
+{% else %}
+FROM {{ item.image }}
+{% endif %}
+
+RUN dnf -y \
+  update && \
+  dnf -y \
+  install systemd-sysv && \
+  dnf clean all
+
+# vim: ft=dockerfile

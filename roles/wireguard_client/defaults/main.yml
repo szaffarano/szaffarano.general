@@ -1,0 +1,5 @@
+---
+wg_client_name: wg0
+wg_client_enabled: true
+wg_peer_allowed_ips: 0.0.0.0/0, ::/0
+wg_peer_keepalive: 25

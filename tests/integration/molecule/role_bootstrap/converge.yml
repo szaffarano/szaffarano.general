@@ -7,7 +7,7 @@
     bootstrap_setup_username: root
     bootstrap_ansible_username: test_user
     bootstrap_ansible_password: test_user_passwd
-    bootstrap_ansible_passwordless: false
+    bootstrap_ansible_passwordless: true
     bootstrap_root_password: rootpasswd
 
   roles:
@@ -17,7 +17,6 @@
   hosts: all
 
   vars:
-    ansible_password: test_user_passwd
     bootstrap_setup_username: test_user
     bootstrap_ansible_username: ansible
     bootstrap_ansible_password: ansible

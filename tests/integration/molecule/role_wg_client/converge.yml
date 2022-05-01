@@ -1,0 +1,17 @@
+---
+- name: Configure wg client
+  hosts: all
+
+  vars:
+    wg_client_name: wg-client-01
+    wg_client_enabled: false
+    wg_iface_cidr: 10.1.2.3/24
+    wg_client_priv: priv
+    wg_peer_pub: pub
+    wg_preshared_key: sha
+    wg_peer_endpoint: localhost:1234
+    wg_peer_allowed_ips: 0.0.0.0/0
+    wg_peer_keepalive: 10
+
+  roles:
+    - role: szaffarano.general.wireguard_client
