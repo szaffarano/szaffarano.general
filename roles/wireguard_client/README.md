@@ -1,7 +1,7 @@
 Wireguard client
 =========
 
-This Ansible role configure a Wireguard client.
+This Ansible role configures a Wireguard client.
 
 Requirements
 ------------
