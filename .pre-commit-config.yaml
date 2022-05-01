@@ -13,10 +13,15 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, main]
   - repo: https://github.com/ansible-network/collection_prep
-    rev: 0.9.6
+    rev: 1.0.0
     hooks:
       - id: update-docs
   - repo: https://github.com/psf/black
-    rev: 21.12b0
+    rev: 22.3.0
     hooks:
       - id: black
+  - repo: https://github.com/ansible-community/ansible-lint.git
+    rev: v6.0.2
+    hooks:
+      - id: ansible-lint
+        files: \.(yaml|yml)$
