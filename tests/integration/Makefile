@@ -18,7 +18,8 @@ roles: $(roles)
 .PHONY: $(scenarios)
 $(scenarios):
 	molecule --version
-	molecule --debug -c molecule.yml create -s $(notdir $@)
+	podman version
+	molecule -c molecule.yml create -s $(notdir $@)
 	podman image ls
 	podman ps
 	podman ps -a
