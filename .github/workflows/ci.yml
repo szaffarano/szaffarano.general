@@ -36,6 +36,7 @@ jobs:
         run: |
           sudo apt-get -y update
           sudo apt-get -y install podman
+          ansible-galaxy collection install -r tests/integration/requirements.yml
 
       - name: Install dependencies
         run: |
