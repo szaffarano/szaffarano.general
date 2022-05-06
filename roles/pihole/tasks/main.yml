@@ -10,7 +10,11 @@
     path: "{{ (pihole_app_dir, item) | path_join }}"
     mode: 0775
     state: directory
-  loop: "{{ [ pihole_etc_dir, pihole_dnsmasq_dir, pihole_logs_dir ] }}"
+  loop: >-
+    {{ [ pihole_etc_dir,
+         pihole_dnsmasq_dir,
+         pihole_logs_dir,
+         pihole_certs_dir ] }}
 
 - name: Create pihole app logs file
   ansible.builtin.command: >-
