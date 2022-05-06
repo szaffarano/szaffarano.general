@@ -32,7 +32,7 @@ Role Variables
   pihole_dns_cnames:
     mycnamedomain.home.arpa: mydomain.home.arpa
   ```
-- **pihole_local_dns: Extra hosts to add to pihole configuration.  All the inventory hosts will be added by default
+- **pihole_local_dns**: Extra hosts to add to pihole configuration.  All the inventory hosts will be added by default
 
 
 Dependencies
