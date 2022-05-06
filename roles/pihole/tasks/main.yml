@@ -10,7 +10,11 @@
     path: "{{ (pihole_app_dir, item) | path_join }}"
     mode: 0775
     state: directory
-  loop: "{{ [ pihole_etc_dir, pihole_dnsmasq_dir, pihole_logs_dir ] }}"
+  loop: >-
+    {{ [ pihole_etc_dir,
+         pihole_dnsmasq_dir,
+         pihole_logs_dir,
+         pihole_certs_dir ] }}
 
 - name: Create pihole app logs file
   ansible.builtin.command: >-
@@ -60,6 +64,13 @@
     mode: 0644
   register: custom_cname_update
 
+- name: Install pihole docker-compose definition
+  ansible.builtin.template:
+    src: templates/docker-compose-pihole.yml.j2
+    dest: "{{ (pihole_app_dir, 'docker-compose.yml') | path_join }}"
+    mode: 0600
+  register: docker_compose_update
+
 - name: Update docker-compose images
   ansible.builtin.command:
     chdir: "{{ pihole_app_dir }}"
@@ -67,13 +78,6 @@
   register: compose_pull_result
   changed_when: >-
     'Downloading' in compose_pull_result.stderr
-
-- name: Install pihole docker-compose definition
-  ansible.builtin.template:
-    src: templates/docker-compose-pihole.yml.j2
-    dest: "{{ (pihole_app_dir, 'docker-compose.yml') | path_join }}"
-    mode: 0600
-  register: docker_compose_update
 
 - name: Restart pihole if something changed
   ansible.builtin.debug:
