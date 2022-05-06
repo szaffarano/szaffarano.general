@@ -1,0 +1,31 @@
+galaxy_info:
+  author: Sebastián Zaffarano <sebas@zaffarano.com.ar>
+  description: Installs and configures pihole
+  license: MIT
+
+  min_ansible_version: "2.12"
+
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: ArchLinux
+      versions:
+        - all
+
+  galaxy_tags:
+    - bootstrap
+    - raspberry
+    - pihole
+    - vpn
+    - networking
+
+dependencies: []
+
+collections: []

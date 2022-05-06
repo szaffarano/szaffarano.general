@@ -5,3 +5,15 @@
 # Ansible Collection - szaffarano.general
 
 General-purpose Ansible roles and playbooks.
+
+## Usage
+
+```shell
+ansible-galaxy collection install szaffarano.general
+```
+
+See roles documentation for further information.
+
+- [Bootstrap role](./roles/bootstrap/README.md)
+- [Pihole role](./roles/pihole/README.md)
+- [Wireguard role](./roles/wireguard_client/README.md)
