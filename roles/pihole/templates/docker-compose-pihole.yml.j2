@@ -1,0 +1,32 @@
+# {{ ansible_managed }}
+version: "3"
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      DEFAULT_HOST: {{ pihole_host }}
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock'
+      - './certs:/etc/nginx/certs'
+    restart: always
+
+  pihole:
+    image: pihole/pihole:latest
+    ports:
+      - '53:53/tcp'
+      - '53:53/udp'
+    volumes:
+      - {{ pihole_app_dir }}/{{ pihole_etc_dir }}:/etc/pihole
+      - {{ pihole_app_dir }}/{{ pihole_dnsmasq_dir }}:/etc/dnsmasq.d
+      - {{ pihole_app_dir }}/{{ pihole_logs_dir }}/{{ pihole_log }}:/var/log/pihole.log:f
+    cap_add:
+      - NET_ADMIN
+    environment:
+      {% for key,value in pihole_environment.items() -%}
+      {{ key }}: {{ value }}
+      {% endfor +%}
+    restart: always

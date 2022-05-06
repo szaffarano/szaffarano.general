@@ -1,0 +1,11 @@
+---
+- name: Restart pihole
+  ansible.builtin.command:
+    chdir: "{{ pihole_app_dir }}"
+    cmd: docker-compose down
+  notify: Start pihole
+
+- name: Start pihole
+  ansible.builtin.command:
+    chdir: "{{ pihole_app_dir }}"
+    cmd: docker-compose up -d

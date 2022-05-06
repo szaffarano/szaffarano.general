@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+{% for key,value in pihole_local_dns.items() -%}
+{{ key }} {{ value }}
+{% endfor +%}
+
+# inventory dns
+{% for host in groups['all'] -%}
+{{ hostvars[host]['ansible_ssh_host'] }} {{ host }}
+{% endfor +%}

@@ -1,0 +1,86 @@
+---
+- name: Create pihole app folder
+  ansible.builtin.file:
+    path: "{{ pihole_app_dir }}"
+    mode: 0775
+    state: directory
+
+- name: Create pihole-related folders
+  ansible.builtin.file:
+    path: "{{ (pihole_app_dir, item) | path_join }}"
+    mode: 0775
+    state: directory
+  loop: "{{ [ pihole_etc_dir, pihole_dnsmasq_dir, pihole_logs_dir ] }}"
+
+- name: Create pihole app logs file
+  ansible.builtin.command: >-
+    touch {{ (pihole_app_dir, pihole_logs_dir, pihole_log) | path_join }}
+  args:
+    creates: >-
+      {{ (pihole_app_dir, pihole_logs_dir, pihole_log) | path_join }}
+
+- name: Install x509 certificate dependencies
+  ansible.builtin.package:
+    name: python3-cryptography
+    state: present
+
+- name: Create private key for {{ pihole_host }}
+  community.crypto.openssl_privatekey:
+    path: >-
+      {{ (pihole_app_dir,
+          pihole_certs_dir,
+          pihole_host + '.key') | path_join }}
+
+- name: Create a self-signed certificate for {{ pihole_host }}
+  community.crypto.x509_certificate:
+    path: >-
+      {{ (pihole_app_dir,
+          pihole_certs_dir,
+              pihole_host + '.crt') | path_join }}
+    privatekey_path: >-
+      {{ (pihole_app_dir,
+          pihole_certs_dir, pihole_host + '.key') | path_join }}
+    provider: selfsigned
+
+- name: Generate pihole local dns config
+  ansible.builtin.template:
+    src: templates/custom.list.j2
+    dest: >-
+      {{ (pihole_app_dir, pihole_etc_dir, 'custom.list') | path_join }}
+    mode: 0644
+  register: local_dns_update
+
+- name: Generate pihole CNAMEs dns config
+  ansible.builtin.template:
+    src: templates/custom-cname.conf.j2
+    dest: >-
+      {{ (pihole_app_dir,
+          pihole_dnsmasq_dir,
+          '05-pihole-custom-cname.conf') | path_join }}
+    mode: 0644
+  register: custom_cname_update
+
+- name: Update docker-compose images
+  ansible.builtin.command:
+    chdir: "{{ pihole_app_dir }}"
+    cmd: docker-compose pull
+  register: compose_pull_result
+  changed_when: >-
+    'Downloading' in compose_pull_result.stderr
+
+- name: Install pihole docker-compose definition
+  ansible.builtin.template:
+    src: templates/docker-compose-pihole.yml.j2
+    dest: "{{ (pihole_app_dir, 'docker-compose.yml') | path_join }}"
+    mode: 0600
+  register: docker_compose_update
+
+- name: Restart pihole if something changed
+  ansible.builtin.debug:
+    msg: Restarting pihole
+  changed_when: >-
+    local_dns_update.changed or
+      custom_cname_update.changed or
+      docker_compose_update.changed or
+      'Downloading' in compose_pull_result.stderr
+  notify: Restart pihole

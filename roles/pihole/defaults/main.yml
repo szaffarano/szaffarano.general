@@ -1,0 +1,7 @@
+---
+pihole_app_dir: /apps/pihole
+pihole_etc_dir: etc-pihole
+pihole_certs_dir: certs
+pihole_dnsmasq_dir: etc-dnsmasq.d
+pihole_logs_dir: var-log
+pihole_log: pihole.log
