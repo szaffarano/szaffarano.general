@@ -54,6 +54,47 @@
 - name: Populate service facts
   ansible.builtin.service_facts:
 
+- name: Verify if hostnamectl exists
+  ansible.builtin.stat:
+    path: /usr/bin/hostnamectl
+  register: hostnamectl
+  when:
+    - bootstrap_setup_hostname
+
+- name: Get current hostname
+  ansible.builtin.command: "hostnamectl --static"
+  changed_when: false
+  register: current_hostname
+  when:
+    - bootstrap_setup_hostname
+    - ansible_facts.services is defined
+    - ansible_facts.services["systemd-hostnamed.service"] is defined
+    - hostnamectl.stat.exists
+
+- name: Set hostname
+  ansible.builtin.command: "hostnamectl set-hostname {{ hostname }}"
+  when:
+    - bootstrap_setup_hostname
+    - ansible_facts.services is defined
+    - ansible_facts.services["systemd-hostnamed.service"] is defined
+    - current_hostname.stdout is defined
+    - current_hostname.stdout is not match(hostname)
+    - hostnamectl.stat.exists
+
+- name: Update /etc/hosts with the new hostname
+  ansible.builtin.replace:
+    path: /etc/hosts
+    regexp: "{{ current_hostname.stdout }}"
+    replace: "{{ hostname }}"
+    backup: true
+  when:
+    - bootstrap_setup_hostname
+    - ansible_facts.services is defined
+    - ansible_facts.services["systemd-hostnamed.service"] is defined
+    - current_hostname.stdout is defined
+    - current_hostname.stdout is not match(hostname)
+    - hostnamectl.stat.exists
+
 - name: Disable autologin for '{{ bootstrap_setup_username }}' before delete it
   ansible.builtin.service:
     name: getty@tty1.service

@@ -1,0 +1,2 @@
+---
+hostname: "{{ bootstrap_hostname | default(inventory_hostname_short) }}"
