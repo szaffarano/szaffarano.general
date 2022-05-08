@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Sebastián Zaffarano <sebas@zaffarano.com.ar>
   description: Bootstrap a new node to be managed by ansible
@@ -23,7 +24,11 @@ galaxy_info:
     - bootstrap
     - raspberry
 
-dependencies: []
+dependencies:
+  - role: robertdebock.bootstrap
+    vars:
+      bootstrap_wait_for_host: false
+      bootstrap_timeout: 3
 
 collections:
   - community.general
