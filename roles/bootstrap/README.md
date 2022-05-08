@@ -15,6 +15,8 @@ Please refer to the [defaults](./defaults/main.yml) file for the list of variabl
 - **bootstrap_ansible_passwordless**: Whether to use passwordless sudo.
 - **bootstrap_delete_setup_user**: Whether to delete the bootstrap setup user once the setup is complete.
 - **bootstrap_ansible_exclusive_key**: Whether remove any other ssh keys from the ansible user.
+- **bootstrap_setup_hostname**: Whether to set the hostname of the node.
+- **bootstrap_hostname**: The hostname to use to set /etc/hostname, when `bootstrap_setup_hostname` is set.
 
 ## Dependencies
 

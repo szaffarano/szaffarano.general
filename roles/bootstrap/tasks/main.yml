@@ -51,6 +51,23 @@
     ansible_sudo_pass: "{{ bootstrap_ansible_password }}"
     ansible_password: "{{ bootstrap_ansible_password }}"
 
+- name: Get current hostname
+  ansible.builtin.command: "hostnamectl --static"
+  changed_when: false
+  register: current_hostname
+
+- name: Set hostname
+  ansible.builtin.command: "hostnamectl set-hostname {{ hostname }}"
+  when: bootstrap_setup_hostname and current_hostname.stdout is not match(hostname)
+
+- name: Update /etc/hosts with the new hostname
+  ansible.builtin.replace:
+    path: /etc/hosts
+    regexp: "{{ current_hostname.stdout }}"
+    replace: "{{ hostname }}"
+    backup: true
+  when: bootstrap_setup_hostname and current_hostname.stdout is not match(hostname)
+
 - name: Populate service facts
   ansible.builtin.service_facts:
 
