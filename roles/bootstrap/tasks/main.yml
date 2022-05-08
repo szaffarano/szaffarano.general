@@ -1,7 +1,6 @@
 ---
 - name: Set '{{ bootstrap_setup_username }}' as ansible user
   ansible.builtin.set_fact:
-    ansible_ssh_user: "{{ bootstrap_setup_username }}"
     ansible_sudo_pass: "{{ ansible_password }}"
 
 - name: Ensure sudo is installed
@@ -48,6 +47,7 @@
 - name: Start using '{{ bootstrap_ansible_username }}' user
   ansible.builtin.set_fact:
     ansible_ssh_user: "{{ bootstrap_ansible_username }}"
+    ansible_username: "{{ bootstrap_ansible_username }}"
     ansible_sudo_pass: "{{ bootstrap_ansible_password }}"
     ansible_password: "{{ bootstrap_ansible_password }}"
 
