@@ -23,7 +23,8 @@ galaxy_info:
     - bootstrap
     - raspberry
 
-dependencies: []
+dependencies:
+  - role: robertdebock.bootstrap
 
 collections:
   - community.general
